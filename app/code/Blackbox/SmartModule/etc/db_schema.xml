@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="email_contact_table" resource="default" engine="innodb" comment="Contacts Table">
+        <column xsi:type="int" name="email_contact_id" padding="10" unsigned="true" nullable="false" identity="true"
+                comment="Primary Key"/>
+        <column xsi:type="smallint" name="is_guest" padding="5" unsigned="true" nullable="true" identity="false"
+                comment="Is Guest"/>
+        <column xsi:type="varchar" name="contact_id" nullable="true" length="15" comment="Connector Contact ID"/>
+        <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="false" identity="false"
+                comment="Customer ID"/>
+        <column xsi:type="smallint" name="website_id" padding="5" unsigned="true" nullable="false" identity="false"
+                default="0" comment="Website ID"/>
+        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" identity="false"
+                default="0" comment="Store ID"/>
+        <column xsi:type="varchar" name="email" nullable="false" length="255" default="" comment="Customer Email"/>
+        <column xsi:type="smallint" name="is_subscriber" padding="5" unsigned="true" nullable="true" identity="false"
+                comment="Is Subscriber"/>
+        <column xsi:type="smallint" name="subscriber_status" padding="5" unsigned="true" nullable="true"
+                identity="false" comment="Subscriber status"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="email_contact_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="EMAIL_CONTACT_TABLE_WEBSITE_ID_STORE_WEBSITE_WEBSITE_ID"
+                    table="email_contact_table" column="website_id" referenceTable="store_website"
+                    referenceColumn="website_id" onDelete="CASCADE"/>
+        <constraint xsi:type="unique" referenceId="EMAIL_CONTACT_TABLE_CUSTOMER_ID">
+            <column name="customer_id"/>
+        </constraint>
+        <index referenceId="EMAIL_CONTACT_TABLE_IS_GUEST" indexType="btree">
+            <column name="is_guest"/>
+        </index>
+        <index referenceId="EMAIL_CONTACT_TABLE_WEBSITE_ID" indexType="btree">
+            <column name="website_id"/>
+        </index>
+        <index referenceId="EMAIL_CONTACT_TABLE_IS_SUBSCRIBER" indexType="btree">
+            <column name="is_subscriber"/>
+        </index>
+        <index referenceId="EMAIL_CONTACT_TABLE_SUBSCRIBER_STATUS" indexType="btree">
+            <column name="subscriber_status"/>
+        </index>
+        <index referenceId="EMAIL_CONTACT_TABLE_EMAIL" indexType="btree">
+            <column name="email"/>
+        </index>
+        <index referenceId="EMAIL_CONTACT_TABLE_CONTACT_ID" indexType="btree">
+            <column name="contact_id"/>
+        </index>
+    </table>
+    <table name="email_review_table" resource="default" engine="innodb" comment="Reviews Table">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true"
+                comment="Primary Key"/>
+        <column xsi:type="int" name="review_id" padding="10" unsigned="true" nullable="false" identity="false"
+                comment="Review Id"/>
+        <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="false" identity="false"
+                comment="Customer ID"/>
+        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" identity="false"
+                comment="Store Id"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="true" comment="Creation Time"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="false" nullable="true" comment="Update Time"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="EMAIL_REVIEW_TABLE_CUSTOMER_ID_EMAIL_CONTACT_TABLE_CUSTOMER_ID"
+                    table="email_review_table" column="customer_id" referenceTable="email_contact_table"
+                    referenceColumn="customer_id" onDelete="CASCADE" disabled="true"/>
+        <constraint xsi:type="unique" referenceId="EMAIL_REVIEW_TABLE_REVIEW_ID">
+            <column name="review_id"/>
+        </constraint>
+        <index referenceId="EMAIL_REVIEW_TABLE_CUSTOMER_ID" indexType="btree">
+            <column name="customer_id"/>
+        </index>
+        <index referenceId="EMAIL_REVIEW_TABLE_STORE_ID" indexType="btree">
+            <column name="store_id"/>
+        </index>
+        <index referenceId="EMAIL_REVIEW_TABLE_CREATED_AT" indexType="btree">
+            <column name="created_at"/>
+        </index>
+        <index referenceId="EMAIL_REVIEW_TABLE_UPDATED_AT" indexType="btree">
+            <column name="updated_at"/>
+        </index>
+    </table>
+    <table name="abandoned_cart_table" resource="default" engine="innodb" comment="Abandoned Carts Table">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true"
+                comment="Primary Key"/>
+        <column xsi:type="int" name="quote_id" padding="10" unsigned="true" nullable="true" identity="false"
+                comment="Quote Id"/>
+        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="true" identity="false"
+                comment="Store Id"/>
+        <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="true" identity="false"
+                comment="Customer ID"/>
+        <column xsi:type="varchar" name="email" nullable="false" length="255" default="" comment="Email"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="255" default="" comment="Contact Status"/>
+        <column xsi:type="smallint" name="is_active" padding="5" unsigned="true" nullable="false" identity="false"
+                default="1" comment="Quote Active"/>
+        <column xsi:type="timestamp" name="quote_updated_at" on_update="false" nullable="true"
+                comment="Quote updated at"/>
+        <column xsi:type="smallint" name="abandoned_cart_number" padding="5" unsigned="true" nullable="false"
+                identity="false" default="0" comment="Abandoned Cart number"/>
+        <column xsi:type="smallint" name="items_count" padding="5" unsigned="true" nullable="true" identity="false"
+                default="0" comment="Quote items count"/>
+        <column xsi:type="varchar" name="items_ids" nullable="true" length="255" comment="Quote item ids"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="true" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="false" nullable="true" comment="Updated at"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <index referenceId="ABANDONED_CART_TABLE_QUOTE_ID" indexType="btree">
+            <column name="quote_id"/>
+        </index>
+        <index referenceId="ABANDONED_CART_TABLE_STORE_ID" indexType="btree">
+            <column name="store_id"/>
+        </index>
+        <index referenceId="ABANDONED_CART_TABLE_CUSTOMER_ID" indexType="btree">
+            <column name="customer_id"/>
+        </index>
+        <index referenceId="ABANDONED_CART_TABLE_EMAIL" indexType="btree">
+            <column name="email"/>
+        </index>
+    </table>
+    <table name="email_review_content_table" resource="default" engine="innodb" comment="Reviews Table">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true"
+                comment="Primary Key"/>
+        <column xsi:type="int" name="review_id" padding="10" unsigned="true" nullable="false" identity="false"
+                comment="Review Id"/>
+        <column xsi:type="text" name="message" nullable="false" comment="Message"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="FK_A7B48A6901AE0F711BE073E750F97E60"
+                    table="email_review_content_table" column="review_id" referenceTable="email_review_table"
+                    referenceColumn="review_id" onDelete="CASCADE"/>
+        <index referenceId="EMAIL_REVIEW_CONTENT_TABLE_REVIEW_ID" indexType="btree">
+            <column name="review_id"/>
+        </index>
+    </table>
+    <table name="email_feedback_index_tmp" resource="default" engine="memory" comment="Feedback Table">
+        <column xsi:type="int" name="feedback_id" padding="10" unsigned="true" nullable="false" identity="true"
+                comment="Primary Key"/>
+        <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="false" identity="false"
+                comment="Customer ID"/>
+        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" identity="false"
+                comment="Store Id"/>
+        <column xsi:type="int" name="message_id" padding="10" unsigned="true" nullable="false" identity="false"
+                comment="Message ID"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="feedback_id"/>
+        </constraint>
+    </table>
+</schema>
