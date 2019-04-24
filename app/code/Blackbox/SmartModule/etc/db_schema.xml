@@ -152,4 +152,45 @@
             <column name="feedback_id"/>
         </constraint>
     </table>
+    <table name="abandoned_cart_table_index" resource="default" engine="innodb" comment="Abandoned Cart Index Table">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true"
+                comment="Primary Key"/>
+        <column xsi:type="int" name="quote_id" padding="10" unsigned="true" nullable="true" identity="false"
+                comment="Quote Id"/>
+        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="true" identity="false"
+                comment="Store Id"/>
+        <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="true" identity="false"
+                comment="Customer ID"/>
+        <column xsi:type="smallint" name="is_active" padding="5" unsigned="true" nullable="false" identity="false"
+                default="1" comment="Quote Active"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <index referenceId="ABANDONED_CART_TABLE_INDEX_QUOTE_ID_STORE_ID_CUSTOMER_ID" indexType="btree">
+            <column name="quote_id"/>
+            <column name="store_id"/>
+            <column name="customer_id"/>
+        </index>
+    </table>
+    <table name="abandoned_cart_table_index_replica" resource="default" engine="innodb"
+           comment="Abandoned Cart Index Table">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true"
+                comment="Primary Key"/>
+        <column xsi:type="int" name="quote_id" padding="10" unsigned="true" nullable="true" identity="false"
+                comment="Quote Id"/>
+        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="true" identity="false"
+                comment="Store Id"/>
+        <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="true" identity="false"
+                comment="Customer ID"/>
+        <column xsi:type="smallint" name="is_active" padding="5" unsigned="true" nullable="false" identity="false"
+                default="1" comment="Quote Active"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <index referenceId="ABANDONED_CART_TABLE_INDEX_REPLICA_QUOTE_ID_STORE_ID_CUSTOMER_ID" indexType="btree">
+            <column name="quote_id"/>
+            <column name="store_id"/>
+            <column name="customer_id"/>
+        </index>
+    </table>
 </schema>

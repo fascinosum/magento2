@@ -3,6 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace Blackbox\SmartModule\Setup;
 
@@ -18,6 +19,8 @@ use Magento\Framework\Setup\SchemaSetupInterface;
 class UpgradeSchema implements UpgradeSchemaInterface
 {
     const EMAIL_REVIEW_CONTENT_TABLE = 'email_review_content_table';
+
+    const ABANDONED_CART_INDEX_TABLE = 'abandoned_cart_table_index';
 
     /**
      * {@inheritdoc}
@@ -43,6 +46,16 @@ class UpgradeSchema implements UpgradeSchemaInterface
         }
         if (version_compare($context->getVersion(), '2.0.5', '<')) {
             $this->recreateFeedbackIndexTmpTable($installer);
+        }
+        if (version_compare($context->getVersion(), '2.0.6', '<')) {
+            $this->createAbandonedCartIndexTable(
+                $installer->getTable(self::ABANDONED_CART_INDEX_TABLE),
+                $installer
+            );
+            $this->createAbandonedCartIndexTable(
+                $installer->getTable(self::ABANDONED_CART_INDEX_TABLE) . '_replica',
+                $installer
+            );
         }
 
         $setup->endSetup();
@@ -228,15 +241,15 @@ class UpgradeSchema implements UpgradeSchemaInterface
      *
      * Before this update the table was created without usage engine=MEMORY.
      *
-     * @param SchemaSetupInterface $setup
+     * @param SchemaSetupInterface $installer
      * @throws \Zend_Db_Exception
      */
-    private function recreateFeedbackIndexTmpTable(SchemaSetupInterface $setup)
+    private function recreateFeedbackIndexTmpTable(SchemaSetupInterface $installer)
     {
-        $connection = $setup->getConnection();
+        $connection = $installer->getConnection();
         $tableName = $connection->getTableName(InstallSchema::EMAIL_FEEDBACK_INDEX_TMP_TABLE);
 
-        $setup->getConnection()->dropTable($tableName);
+        $installer->getConnection()->dropTable($tableName);
 
         $table = $connection
             ->newTable($tableName)
@@ -276,5 +289,89 @@ class UpgradeSchema implements UpgradeSchemaInterface
             ->setComment('Feedback Table');
 
         $connection->createTable($table);
+    }
+
+    /**
+     * Create abandoned cart index table.
+     *
+     * @param SchemaSetupInterface $installer
+     * @throws \Zend_Db_Exception
+     */
+    private function createAbandonedCartIndexTable(string $tableName, SchemaSetupInterface $installer)
+    {
+        $this->dropTableIfExists($installer, $tableName);
+
+        $table = $installer->getConnection()->newTable($tableName);
+        $this->addColumnsToAbandonedCartIndexTable($table);
+        $this->addIndexesToAbandonedCartIndexTable($installer, $table);
+        $table->setComment('Abandoned Cart Index Table');
+        $installer->getConnection()->createTable($table);
+    }
+
+    /**
+     * Add columns to abandoned cart index table.
+     *
+     * @param Table $table
+     * @throws \Zend_Db_Exception
+     */
+    private function addColumnsToAbandonedCartIndexTable(Table $table)
+    {
+        $table
+            ->addColumn(
+                'id',
+                Table::TYPE_INTEGER,
+                null,
+                [
+                    'primary' => true,
+                    'identity' => true,
+                    'unsigned' => true,
+                    'nullable' => false
+                ],
+                'Primary Key'
+            )->addColumn(
+                'quote_id',
+                Table::TYPE_INTEGER,
+                null,
+                ['unsigned' => true, 'nullable' => true],
+                'Quote Id'
+            )->addColumn(
+                'store_id',
+                Table::TYPE_SMALLINT,
+                10,
+                ['unsigned' => true, 'nullable' => true],
+                'Store Id'
+            )->addColumn(
+                'customer_id',
+                Table::TYPE_INTEGER,
+                10,
+                ['unsigned' => true, 'nullable' => true, 'default' => null],
+                'Customer ID'
+            )->addColumn(
+                'is_active',
+                Table::TYPE_SMALLINT,
+                5,
+                ['unsigned' => true, 'nullable' => false, 'default' => '1'],
+                'Quote Active'
+            );
+    }
+
+    /**
+     * Add indexes to abandoned cart index table.
+     *
+     * @param SchemaSetupInterface $installer
+     * @param Table $table
+     * @throws \Zend_Db_Exception
+     */
+    private function addIndexesToAbandonedCartIndexTable(SchemaSetupInterface $installer, Table $table)
+    {
+        $tableName = $table->getName();
+        $table
+            ->addIndex(
+                $installer->getIdxName(
+                    $installer->getTable($tableName),
+                    ['quote_id', 'store_id', 'customer_id']
+                ),
+                ['quote_id', 'store_id', 'customer_id']
+            );
     }
 }
