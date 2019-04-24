@@ -12,6 +12,7 @@ use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Setup\UpgradeSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
+use Magento\Store\Model\Store;
 
 /**
  * @inheritDoc
@@ -56,6 +57,11 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 $installer->getTable(self::ABANDONED_CART_INDEX_TABLE) . '_replica',
                 $installer
             );
+        }
+
+        /** Can not be converted to a declaration */
+        if (version_compare($context->getVersion(), '2.1.5', '<')) {
+            $this->makeReviewSegmentationByStore($installer);
         }
 
         $setup->endSetup();
@@ -373,5 +379,40 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 ),
                 ['quote_id', 'store_id', 'customer_id']
             );
+    }
+
+    /**
+     * Separate abandoned cart indexer tables by store.
+     *
+     * @param SchemaSetupInterface $setup
+     * @throws \Zend_Db_Exception
+     */
+    private function makeReviewSegmentationByStore(SchemaSetupInterface $setup): void
+    {
+        $connection = $setup->getConnection();
+        $indexerTableName = $setup->getTable(self::ABANDONED_CART_INDEX_TABLE);
+        $storeSelect = $connection->select()
+            ->from($setup->getTable('store'))
+            ->where('store_id > 0');
+
+        foreach ($connection->fetchAll($storeSelect) as $storeData) {
+            $indexTable =  implode('_', [$indexerTableName, Store::ENTITY, $storeData['store_id']]);
+            if (!$connection->isTableExists($indexTable)) {
+                $connection->createTable(
+                    $connection->createTableByDdl(
+                        $indexerTableName,
+                        $indexTable
+                    )
+                );
+            }
+            if (!$connection->isTableExists($indexTable . '_replica')) {
+                $connection->createTable(
+                    $connection->createTableByDdl(
+                        $indexerTableName,
+                        $indexTable . '_replica'
+                    )
+                );
+            }
+        }
     }
 }
