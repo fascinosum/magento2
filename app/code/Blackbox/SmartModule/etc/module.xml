@@ -7,5 +7,9 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="Blackbox_SmartModule"/>
+    <module name="Blackbox_SmartModule">
+        <sequence>
+            <module name="Magento_Customer"/>
+        </sequence>
+    </module>
 </config>
