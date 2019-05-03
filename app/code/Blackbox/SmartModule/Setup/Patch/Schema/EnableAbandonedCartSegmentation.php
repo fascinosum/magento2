@@ -7,26 +7,27 @@ declare(strict_types=1);
 
 namespace Blackbox\SmartModule\Setup\Patch\Schema;
 
-use Magento\Framework\Setup\SchemaSetupInterface;
+use Magento\Framework\Setup\ModuleDataSetupInterface;
+use Magento\Framework\Setup\Patch\PatchVersionInterface;
 use Magento\Framework\Setup\Patch\SchemaPatchInterface;
 use Magento\Store\Model\Store;
 
 /**
  * Class EnableAbandonedCartSegmentation.
  */
-class EnableAbandonedCartSegmentation implements SchemaPatchInterface
+class EnableAbandonedCartSegmentation implements SchemaPatchInterface, PatchVersionInterface
 {
     /**
-     * @var SchemaSetupInterface
+     * @var ModuleDataSetupInterface $moduleDataSetup
      */
-    private $schemaSetup;
+    private $moduleDataSetup;
 
     /**
-     * @param SchemaSetupInterface $schemaSetup
+     * @param ModuleDataSetupInterface $moduleDataSetup
      */
-    public function __construct(SchemaSetupInterface $schemaSetup)
+    public function __construct(ModuleDataSetupInterface $moduleDataSetup)
     {
-        $this->schemaSetup = $schemaSetup;
+        $this->moduleDataSetup = $moduleDataSetup;
     }
 
     /**
@@ -35,7 +36,7 @@ class EnableAbandonedCartSegmentation implements SchemaPatchInterface
      */
     public function apply()
     {
-        $setup = $this->schemaSetup;
+        $setup = $this->moduleDataSetup;
         $setup->startSetup();
 
         $connection = $setup->getConnection();
@@ -70,7 +71,7 @@ class EnableAbandonedCartSegmentation implements SchemaPatchInterface
     /**
      * {@inheritdoc}
      */
-    public static function getDependencies()
+    public function getAliases()
     {
         return [];
     }
@@ -78,8 +79,23 @@ class EnableAbandonedCartSegmentation implements SchemaPatchInterface
     /**
      * {@inheritdoc}
      */
-    public function getAliases()
+    public static function getDependencies()
     {
         return [];
+    }
+
+    /**
+     * This version associate patch with Magento setup version.
+     * For example, if Magento current setup version is 2.0.3 and patch version is 2.0.2 than
+     * this patch will be added to registry, but will not be applied, because it is already applied
+     * by old mechanism of UpgradeData.php script
+     *
+     *
+     * @return string
+     * @deprecated 102.0.0 since appearance, required for backward compatibility
+     */
+    public static function getVersion()
+    {
+        return '2.1.5';
     }
 }
