@@ -61,7 +61,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
 
         /** Can not be converted to a declaration */
         if (version_compare($context->getVersion(), '2.1.5', '<')) {
-            $this->makeReviewSegmentationByStore($installer);
+            $this->enableAbandonedCartSegmentation($installer);
         }
 
         $setup->endSetup();
@@ -387,7 +387,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
      * @param SchemaSetupInterface $setup
      * @throws \Zend_Db_Exception
      */
-    private function makeReviewSegmentationByStore(SchemaSetupInterface $setup): void
+    private function enableAbandonedCartSegmentation(SchemaSetupInterface $setup): void
     {
         $connection = $setup->getConnection();
         $indexerTableName = $setup->getTable(self::ABANDONED_CART_INDEX_TABLE);
