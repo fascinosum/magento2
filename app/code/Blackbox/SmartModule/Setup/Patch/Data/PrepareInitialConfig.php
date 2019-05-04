@@ -12,12 +12,12 @@ use Magento\Framework\FlagManager;
 use Magento\Framework\Math\Random;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
+use Magento\Framework\Setup\Patch\PatchVersionInterface;
 
 /**
  * Patch is mechanism, that allows to do atomic upgrade data changes
  */
-class PrepareInitialConfig implements
-    DataPatchInterface
+class PrepareInitialConfig implements DataPatchInterface, PatchVersionInterface
 {
     /**
      * @var ModuleDataSetupInterface $moduleDataSetup
@@ -72,7 +72,7 @@ class PrepareInitialConfig implements
         );
         $this->flagManager->saveFlag(
             'blackbox_flag_v_2_0_0',
-            __CLASS__  . __FUNCTION__
+            __CLASS__ . ':' . __FUNCTION__
         );
     }
 
@@ -90,5 +90,20 @@ class PrepareInitialConfig implements
     public static function getDependencies()
     {
         return [];
+    }
+
+    /**
+     * This version associate patch with Magento setup version.
+     * For example, if Magento current setup version is 2.0.3 and patch version is 2.0.2 than
+     * this patch will be added to registry, but will not be applied, because it is already applied
+     * by old mechanism of UpgradeData.php script
+     *
+     *
+     * @return string
+     * @deprecated 102.0.0 since appearance, required for backward compatibility
+     */
+    public static function getVersion()
+    {
+        return '2.0.0';
     }
 }
