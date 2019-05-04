@@ -3,6 +3,7 @@
 1. Install Magento 2.3.1 using branch [i2019](https://github.com/fascinosum/magento2/tree/i2019)
 
 2. <h5>Module without dynamic schema changes</h5>
+
     * Switch to the branch [i2019-module](https://github.com/fascinosum/magento2/tree/i2019-module)
     * execute
         ```bash
@@ -47,13 +48,15 @@
         bin/magento setup:upgrade
         ```
         one more time. Verify that `abandoned_cart_table_index_store_1` still exists
+        
 4. <h5>Module with data changes</h5>
+
     * Switch to the branch [i2019-data-changes](https://github.com/fascinosum/magento2/tree/i2019-data-changes)
     * use 
-            ```bash
-            bin/magento setup:db-declaration:generate-patch
-            ```
-            command to create a new data patch with the name _**PrepareInitialConfig**_
+        ```bash
+        bin/magento setup:db-declaration:generate-patch
+        ```
+        command to create a new data patch with the name _**PrepareInitialConfig**_
     * copy data changes form the `InstallData` file into `PrepareInitialConfig` data patch
     * in the same way create _**AddSmartModuleUserCustomerAttribute**_ and _**ConvertReviewMessageToJson**_ data patches
     and copy data changes from the `UpgradeData` file
@@ -73,6 +76,7 @@
         * blackbox_flag_v_2_0_10
         * blackbox_flag_v_2_1_3
 5. <h5>Module with converted schema</h5>
+
     * Switch to the branch [i2019-data-patches](https://github.com/fascinosum/magento2/tree/i2019-data-patches)
     * use 
         ```bash
