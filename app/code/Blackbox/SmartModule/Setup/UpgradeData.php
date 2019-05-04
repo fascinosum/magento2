@@ -62,7 +62,7 @@ class UpgradeData implements UpgradeDataInterface
     {
         $installer = $setup;
         $installer->startSetup();
-        if (version_compare($context->getVersion(), '2.0.4', '<')) {
+        if (version_compare($context->getVersion(), '2.0.10', '<')) {
             $this->addSmartModuleUserCustomerAttribute($installer);
         }
 
@@ -94,8 +94,8 @@ class UpgradeData implements UpgradeDataInterface
             ]
         );
         $this->flagManager->saveFlag(
-            'blackbox_flag_v_2_0_4',
-            __FUNCTION__
+            'blackbox_flag_v_2_0_10',
+            __CLASS__ . ':' . __FUNCTION__
         );
     }
 
@@ -114,7 +114,7 @@ class UpgradeData implements UpgradeDataInterface
         );
         $this->flagManager->saveFlag(
             'blackbox_flag_v_2_1_3',
-            __FUNCTION__
+            __CLASS__ . ':' . __FUNCTION__
         );
     }
 }

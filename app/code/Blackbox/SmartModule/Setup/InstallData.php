@@ -88,7 +88,7 @@ class InstallData implements InstallDataInterface
         $this->generateAndSaveCode();
         $this->flagManager->saveFlag(
             'blackbox_flag_v_2_0_0',
-            __FUNCTION__
+            __CLASS__ . ':' . __FUNCTION__
         );
     }
 }
