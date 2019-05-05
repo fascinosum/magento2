@@ -38,8 +38,8 @@ class UpgradeSchema implements UpgradeSchemaInterface
         if (version_compare($context->getVersion(), '2.0.2', '<')) {
             $this->addReplicaTable(
                 $installer,
-                InstallSchema::EMAIL_REVIEW_TABLE,
-                implode('_', [InstallSchema::EMAIL_REVIEW_TABLE, 'replica'])
+                $installer->getTable(InstallSchema::EMAIL_REVIEW_TABLE),
+                implode('_', [$installer->getTable(InstallSchema::EMAIL_REVIEW_TABLE), 'replica'])
             );
         }
         if (version_compare($context->getVersion(), '2.0.3', '<')) {
@@ -51,10 +51,6 @@ class UpgradeSchema implements UpgradeSchemaInterface
         if (version_compare($context->getVersion(), '2.0.6', '<')) {
             $this->createAbandonedCartIndexTable(
                 $installer->getTable(self::ABANDONED_CART_INDEX_TABLE),
-                $installer
-            );
-            $this->createAbandonedCartIndexTable(
-                $installer->getTable(self::ABANDONED_CART_INDEX_TABLE) . '_replica',
                 $installer
             );
         }
@@ -405,11 +401,12 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     )
                 );
             }
-            if (!$connection->isTableExists($indexTable . '_replica')) {
+            $tmpTableName = implode('_', [$indexTable, 'tmp']);
+            if (!$connection->isTableExists($tmpTableName)) {
                 $connection->createTable(
                     $connection->createTableByDdl(
                         $indexerTableName,
-                        $indexTable . '_replica'
+                        $tmpTableName
                     )
                 );
             }
