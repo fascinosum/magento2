@@ -10,6 +10,9 @@
         bin/magento setup:upgrade --convert-old-scripts 1
         ```
     * check the result in the `app/code/Blackbox/SmartModule/etc/db_schema.xml` file
+    * see `Setup\UpgradeSchema::addReplicaTable` executes a direct SQL query. 
+    `email_review_table_replica` must be manually declared in `etc/db_schema.xml`. 
+    Copy the declaration of `email_review_table` and change only the attribute `name` to `email_review_table_replica`
     * remove `setup_version` attribute from the `module` node in `app/code/Blackbox/SmartModule/etc/module.xml`
     * execute 
         ```bash
@@ -27,17 +30,18 @@
         command to create a new schema patch with the name _**EnableAbandonedCartSegmentation**_
         * _use `--type schema` as command parameter_
         
-    * copy new changes from the `UpgradeSchema` file into schema patch (use code from enableAbandonedCartSegmentation method)
+    * copy new changes from the `Setup/UpgradeSchema.php` file into schema patch (use code from enableAbandonedCartSegmentation method)
     * implement `PatchVersionInterface` to `EnableAbandonedCartSegmentation`. 
-    Use the module version value from the `UpgradeSchema` as a return value for `getVersion` method
+    Use the module version value from the `Setup/UpgradeSchema.php` as a return value for `getVersion` method
     * run command
         ```bash
         bin/magento setup:upgrade
         ```
-        * _If you are faced with some difficulties you can switch to the [i2019-schema-patches](https://github.com/fascinosum/magento2/tree/i2019-schema-patches) branch_
+        * _If you are faced with some difficulties you can switch to the [i2019-schema-patches](https://github.com/fascinosum/magento2/tree/i2019-schema-patches) branch
+        and execute the command again_
     * check the result in the database. There should the following tables:
-        * abandoned_cart_table_index_store_1
-        * abandoned_cart_table_index_store_1_replica
+        * `abandoned_cart_table_index_store_1`
+        * `abandoned_cart_table_index_store_1_tmp`
     * `patch_list` table should contains row with the patch name `Blackbox\SmartModule\Setup\Patch\Schema\EnableAbandonedCartSegmentation`
     * try to put any executable code, for example,
         ```php
@@ -57,17 +61,18 @@
         bin/magento setup:db-declaration:generate-patch
         ```
         command to create a new data patch with the name _**PrepareInitialConfig**_
-    * copy data changes form the `InstallData` file into `PrepareInitialConfig` data patch
+    * copy data changes form the `Setup/InstallData.php` file into `PrepareInitialConfig` data patch
     * in the same way create _**AddSmartModuleUserCustomerAttribute**_ and _**ConvertReviewMessageToJson**_ data patches
-    and copy data changes from the `UpgradeData` file
+    and copy data changes from the `Setup/UpgradeData.php` file
     * declare correct order for patches using module versions 
     from the `UpgradeSchema` as a return value for `getVersion` method. 
     Use **2.0.0** as a module version for `PrepareInitialConfig` patch
-        * _If you are faced with some difficulties you can switch to the [i2019-data-patches](https://github.com/fascinosum/magento2/tree/i2019-data-patches) branch_
     * execute 
         ```bash
         bin/magento setup:upgrade
         ```
+        * _If you are faced with some difficulties you can switch to the [i2019-data-patches](https://github.com/fascinosum/magento2/tree/i2019-data-patches) branch
+        and execute the command again_
     * check the `patch_list` table, it should contain rows with the following patch data names
         * Blackbox\SmartModule\Setup\Patch\Data\PrepareInitialConfig
         * Blackbox\SmartModule\Setup\Patch\Data\AddSmartModuleUserCustomerAttribute
@@ -77,12 +82,12 @@
         * blackbox_flag_v_2_1_3
 5. <h5>Module with converted schema</h5>
 
-    * Switch to the branch [i2019-data-patches](https://github.com/fascinosum/magento2/tree/i2019-data-patches)
+    * You can use you the existing state of the project or switch to the branch [i2019-data-patches](https://github.com/fascinosum/magento2/tree/i2019-data-patches)
     * use 
         ```bash
         bin/magento setup:db-declaration:generate-whitelist --module-name Blackbox_SmartModule
         ```
-        command to generate `db_schema_whitelist.json`
+        command to generate `etc/db_schema_whitelist.json`
     * remove `<column name="quote_id"/>` from
         ```xml
         <index referenceId="ABANDONED_CART_TABLE_INDEX_QUOTE_ID_STORE_ID_CUSTOMER_ID" indexType="btree">
@@ -97,7 +102,7 @@
         bin/magento setup:db-declaration:generate-whitelist --module-name Blackbox_SmartModule
         ```
         one more time
-    * check `db_schema_whitelist.json`, there should be 2 indexer names
+    * check `etc/db_schema_whitelist.json`, there should be 2 indexer names
         ```json
         "index": {
             "ABANDONED_CART_TABLE_INDEX_QUOTE_ID_STORE_ID_CUSTOMER_ID": true,
