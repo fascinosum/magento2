@@ -401,11 +401,12 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     )
                 );
             }
-            if (!$connection->isTableExists($indexTable . '_replica')) {
+            $tmpTableName = implode('_', [$indexTable, 'tmp']);
+            if (!$connection->isTableExists($tmpTableName)) {
                 $connection->createTable(
                     $connection->createTableByDdl(
                         $indexerTableName,
-                        $indexTable . '_replica'
+                        $tmpTableName
                     )
                 );
             }
