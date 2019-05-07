@@ -29,10 +29,11 @@
         ```
         command to create a new schema patch with the name _**EnableAbandonedCartSegmentation**_
         * _use `--type schema` as command parameter_
-        
+    * NOTE: Patches should be named by their purpose.
     * copy new changes from the `Setup/UpgradeSchema.php` file into schema patch (use code from enableAbandonedCartSegmentation method)
     * implement `PatchVersionInterface` to `EnableAbandonedCartSegmentation`. 
-    Use the module version value from the `Setup/UpgradeSchema.php` as a return value for `getVersion` method
+    Use the module version value from the `Setup/UpgradeSchema.php` as a return value for `getVersion` method.
+    * NOTE: `PatchVersionInterface` is deprecated since it is used only for migration purposes. New patches that appear after module migration should not implement this interface. Migrated patches MUST implement this interface and return the version they are designated to in legacy setup script. This is required for backward compatibility.
     * run command
         ```bash
         bin/magento setup:upgrade
@@ -52,6 +53,7 @@
         bin/magento setup:upgrade
         ```
         one more time. Verify that `abandoned_cart_table_index_store_1` still exists
+    * NOTE: After all setup code is migrated to patches the legacy setup scripts can be deleted.
         
 4. <h5>Module with data changes</h5>
 
@@ -80,6 +82,8 @@
     * check the `flag` table, there should be 2 new flags with the correct order of Blackbox_SmartModule versions
         * blackbox_flag_v_2_0_10
         * blackbox_flag_v_2_1_3
+    * NOTE: Since this is a migration scenario patches do not hold dependencies and the order is recognized by version, however new patches order is recognized by dependencies. Patches may have several dependencies, the final structure is a tree that is applied recursively. If you see that your patch requires some data from another patch you MUST add the dependency by refering the class name of the patch that your new one depends on.
+    
 5. <h5>Module with converted schema</h5>
 
     * You can use you the existing state of the project or switch to the branch [i2019-data-patches](https://github.com/fascinosum/magento2/tree/i2019-data-patches)
