@@ -17,6 +17,8 @@ use Magento\Store\Model\Store;
  */
 class EnableAbandonedCartSegmentation implements SchemaPatchInterface, PatchVersionInterface
 {
+    const ABANDONED_CART_INDEX_TABLE = 'abandoned_cart_table_index';
+
     /**
      * @var ModuleDataSetupInterface $moduleDataSetup
      */
@@ -40,7 +42,7 @@ class EnableAbandonedCartSegmentation implements SchemaPatchInterface, PatchVers
         $setup->startSetup();
 
         $connection = $setup->getConnection();
-        $indexerTableName = $setup->getTable('abandoned_cart_table_index');
+        $indexerTableName = $setup->getTable(self::ABANDONED_CART_INDEX_TABLE);
         $storeSelect = $connection->select()
             ->from($setup->getTable('store'))
             ->where('store_id > 0');
