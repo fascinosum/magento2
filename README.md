@@ -1,8 +1,8 @@
-<h2>Declarative Schema Workshop</h2>
+<h1>Declarative Schema Workshop</h1>
 
 1. Install Magento 2.3.1 using branch [i2019](https://github.com/fascinosum/magento2/tree/i2019)
 
-2. <h5>Module without dynamic schema changes</h5>
+2. <h3>Module without dynamic schema changes</h3>
 
     * Switch to the branch [i2019-module](https://github.com/fascinosum/magento2/tree/i2019-module)
     * execute
@@ -22,7 +22,7 @@
     * check the result in `var/log/dry-run-installation.log` file. 
     Expected result: the file does not exist or there are no changes for the module tables
 
-3. <h5>Module with dynamic schema changes</h5> 
+3. <h3>Module with dynamic schema changes</h3> 
     
     * Switch to the branch [i2019-dynamic-schema-changes](https://github.com/fascinosum/magento2/tree/i2019-dynamic-schema-changes)
     * use 
@@ -73,7 +73,7 @@
         one more time. Verify that `abandoned_cart_table_index_store_1` still exists
     * _**NOTE:** After all setup code is migrated to patches the legacy schema setup/upgrade scripts can be deleted._
         
-4. <h5>Module with data changes</h5>
+4. <h3>Module with data changes</h3>
 
     * Switch to the branch [i2019-data-changes](https://github.com/fascinosum/magento2/tree/i2019-data-changes)
     * use 
@@ -105,7 +105,7 @@
      Patches may have several dependencies, the final structure is a tree that is applied recursively.
      If you see that your patch requires some data from another patch you MUST add the dependency by refering the class name of the patch that your new one depends on._
     
-5. <h5>Module with converted schema</h5>
+5. <h3>Module with converted schema</h3>
 
     * You can use you the existing state of the project or switch to the branch [i2019-data-patches](https://github.com/fascinosum/magento2/tree/i2019-data-patches)
     * use 
