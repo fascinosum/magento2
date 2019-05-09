@@ -18,6 +18,14 @@
         git clone git@github.com:fascinosum/magento2.git
         ```
     * Checkout to the `i2019` branch
+    * Uninstall Magento if it is installed
+        ```bash
+        bin/magento setup:uninstall -q
+        ```
+    * Update composer packages
+        ```bash
+        composer install
+        ```
     * Install Magento 2.3.1 using [i2019](https://github.com/fascinosum/magento2/tree/i2019) branch.
         You can use any of the following methods
         * WebSetup Wizard
@@ -30,7 +38,7 @@
             --base-url=http://<domain_name>/ --base-url-secure=https://<domain_name>/ \
             --db-user=<db_user> --db-password=<db_password> --db-name=<db_name>
             ```
-        * any your installation script
+        * any installation script
         * _**NOTE:** Do not use a database prefix_
 
 2. <h3>Module without dynamic schema changes</h3>
