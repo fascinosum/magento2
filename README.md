@@ -1,6 +1,7 @@
 <h1>Declarative Schema Workshop</h1>
 
 1. <h3>Install Magento</h3>
+
     * If you have already cloned [magento2](https://github.com/magento/magento2) repository use 
         ```bash
         git remote add workshop git@github.com:fascinosum/magento2.git
