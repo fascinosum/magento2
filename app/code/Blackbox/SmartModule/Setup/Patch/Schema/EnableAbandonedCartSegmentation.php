@@ -10,15 +10,12 @@ namespace Blackbox\SmartModule\Setup\Patch\Schema;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\PatchVersionInterface;
 use Magento\Framework\Setup\Patch\SchemaPatchInterface;
-use Magento\Store\Model\Store;
 
 /**
  * Class EnableAbandonedCartSegmentation.
  */
 class EnableAbandonedCartSegmentation implements SchemaPatchInterface, PatchVersionInterface
 {
-    const ABANDONED_CART_INDEX_TABLE = 'abandoned_cart_table_index';
-
     /**
      * @var ModuleDataSetupInterface $moduleDataSetup
      */
@@ -42,13 +39,16 @@ class EnableAbandonedCartSegmentation implements SchemaPatchInterface, PatchVers
         $setup->startSetup();
 
         $connection = $setup->getConnection();
-        $indexerTableName = $setup->getTable(self::ABANDONED_CART_INDEX_TABLE);
+        $indexerTableName = $setup->getTable('abandoned_cart_table_index');
         $storeSelect = $connection->select()
             ->from($setup->getTable('store'))
             ->where('store_id > 0');
 
         foreach ($connection->fetchAll($storeSelect) as $storeData) {
-            $indexTable =  implode('_', [$indexerTableName, Store::ENTITY, $storeData['store_id']]);
+            $indexTable =  implode(
+                '_',
+                [$indexerTableName, \Magento\Store\Model\Store::ENTITY, $storeData['store_id']]
+            );
             if (!$connection->isTableExists($indexTable)) {
                 $connection->createTable(
                     $connection->createTableByDdl(
