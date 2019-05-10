@@ -12,8 +12,8 @@ use Magento\Framework\Setup\Patch\PatchRevertableInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 
 /**
-* Patch is mechanism, that allows to do atomic upgrade data changes
-*/
+ * Patch is mechanism, that allows to do atomic upgrade data changes
+ */
 class %class% implements
     %patchInterface%
 {
