@@ -7,10 +7,7 @@ declare(strict_types=1);
 
 namespace Blackbox\SmartModule\Setup;
 
-use Magento\Framework\App\Config\ConfigResource\ConfigInterface;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\FlagManager;
-use Magento\Framework\Math\Random;
 use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
@@ -26,26 +23,26 @@ class InstallData implements InstallDataInterface
     private $randomMath;
 
     /**
-     * @var FlagManager
+     * @var \Magento\Framework\FlagManager
      */
     private $flagManager;
 
     /**
-     * @var ConfigInterface
+     * @var \Magento\Framework\App\Config\ConfigResource\ConfigInterface
      */
     private $config;
 
     /**
-     * @param ConfigInterface $config
-     * @param Random $random
-     * @param FlagManager $flagManager
+     * @param \Magento\Framework\App\Config\ConfigResource\ConfigInterface $config
+     * @param \Magento\Framework\Math\Random $randomMath
+     * @param \Magento\Framework\FlagManager $flagManager
      */
     public function __construct(
-        ConfigInterface $config,
-        Random $random,
-        FlagManager $flagManager
+        \Magento\Framework\App\Config\ConfigResource\ConfigInterface $config,
+        \Magento\Framework\Math\Random $randomMath,
+        \Magento\Framework\FlagManager $flagManager
     ) {
-        $this->randomMath = $random;
+        $this->randomMath = $randomMath;
         $this->flagManager = $flagManager;
         $this->config = $config;
     }
@@ -66,11 +63,9 @@ class InstallData implements InstallDataInterface
     }
 
     /**
-     * Generate and save code.
-     *
      * @throws LocalizedException
      */
-    private function generateAndSaveCode()
+    private function prepareInitialConfig()
     {
         $this->config->saveConfig(
             'smartmodule/generator/random_key',
@@ -78,14 +73,6 @@ class InstallData implements InstallDataInterface
             'default',
             '0'
         );
-    }
-
-    /**
-     * @throws LocalizedException
-     */
-    private function prepareInitialConfig(): void
-    {
-        $this->generateAndSaveCode();
         $this->flagManager->saveFlag(
             'blackbox_flag_v_2_0_0',
             __CLASS__ . ':' . __FUNCTION__
