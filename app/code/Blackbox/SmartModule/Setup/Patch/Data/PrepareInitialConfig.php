@@ -42,18 +42,18 @@ class PrepareInitialConfig implements DataPatchInterface, PatchVersionInterface
     /**
      * @param ModuleDataSetupInterface $moduleDataSetup
      * @param ConfigInterface $config
-     * @param Random $random
+     * @param Random $randomMath
      * @param FlagManager $flagManager
      */
     public function __construct(
         ModuleDataSetupInterface $moduleDataSetup,
         ConfigInterface $config,
-        Random $random,
+        Random $randomMath,
         FlagManager $flagManager
     ) {
         $this->moduleDataSetup = $moduleDataSetup;
         $this->config = $config;
-        $this->randomMath = $random;
+        $this->randomMath = $randomMath;
         $this->flagManager = $flagManager;
     }
 

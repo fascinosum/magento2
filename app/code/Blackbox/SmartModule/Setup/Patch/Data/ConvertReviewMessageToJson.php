@@ -36,17 +36,17 @@ class ConvertReviewMessageToJson implements DataPatchInterface, PatchVersionInte
 
     /**
      * @param ModuleDataSetupInterface $moduleDataSetup
-     * @param FieldDataConverterFactory $fieldDataConverterFactory
      * @param FlagManager $flagManager
+     * @param FieldDataConverterFactory $fieldDataConverterFactory
      */
     public function __construct(
         ModuleDataSetupInterface $moduleDataSetup,
-        FieldDataConverterFactory $fieldDataConverterFactory,
-        FlagManager $flagManager
+        FlagManager $flagManager,
+        FieldDataConverterFactory $fieldDataConverterFactory
     ) {
         $this->moduleDataSetup = $moduleDataSetup;
-        $this->fieldDataConverterFactory = $fieldDataConverterFactory;
         $this->flagManager = $flagManager;
+        $this->fieldDataConverterFactory = $fieldDataConverterFactory;
     }
 
     /**
@@ -56,10 +56,11 @@ class ConvertReviewMessageToJson implements DataPatchInterface, PatchVersionInte
      */
     public function apply()
     {
+        $setup = $this->moduleDataSetup;
         $fieldDataConverter = $this->fieldDataConverterFactory->create(SerializedToJson::class);
         $fieldDataConverter->convert(
-            $this->moduleDataSetup->getConnection(),
-            $this->moduleDataSetup->getTable('email_review_content_table'),
+            $setup->getConnection(),
+            $setup->getTable('email_review_content_table'),
             'review_id',
             'message'
         );
