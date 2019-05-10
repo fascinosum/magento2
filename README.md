@@ -75,7 +75,8 @@
     * _we use `--type schema` as command parameter for schema patches_
     * _**NOTE:** Patches should be named by their purpose._
 * Copy new changes from the `Setup/UpgradeSchema.php` file 
-    to the `Setup/Patch/Schema/EnableAbandonedCartSegmentation::apply` method (use code from `enableAbandonedCartSegmentation` method).
+    to the `Setup/Patch/Schema/EnableAbandonedCartSegmentation::apply` method 
+    (use code from `Setup/UpgradeSchema.php::enableAbandonedCartSegmentation` method).
     
     Add
     ```php
@@ -88,8 +89,9 @@
         $setup->endSetup();
     ```
     at the end
-* Implement `PatchVersionInterface` to `EnableAbandonedCartSegmentation`. 
-    Use the module version value from the `Setup/UpgradeSchema.php` as a return value for `getVersion` method.
+* Implement `\Magento\Framework\Setup\Patch\PatchVersionInterface` to `EnableAbandonedCartSegmentation`. 
+    Use the appropriate module version value from the `Setup/UpgradeSchema.php`
+    as a return value for the `Setup/Patch/Schema/EnableAbandonedCartSegmentation::getVersion` method.
     * _**NOTE:** `PatchVersionInterface` is deprecated since it is used only for migration purposes. 
     New patches that appear after module migration should not implement this interface. 
     Migrated patches MUST implement this interface and return the version they are designated to in legacy setup script.
@@ -106,10 +108,11 @@
 * Check the result in the database. There should the following tables:
     * `abandoned_cart_table_index_store_1`
     * `abandoned_cart_table_index_store_1_tmp`
-* `patch_list` table should contains row with the patch name `Blackbox\SmartModule\Setup\Patch\Schema\EnableAbandonedCartSegmentation`
+* `patch_list` table should contains row with the patch name
+    `Blackbox\SmartModule\Setup\Patch\Schema\EnableAbandonedCartSegmentation`
 * Try to put any executable code, for example,
     ```php
-    $connection->dropTable('abandoned_cart_table_index_store_1');
+    $this->moduleDataSetup->getConnection()->dropTable('abandoned_cart_table_index_store_1');
     ```
     into the patch file and run
     ```bash
@@ -129,12 +132,20 @@
     bin/magento setup:db-declaration:generate-patch --type data -- Blackbox_SmartModule PrepareInitialConfig
     ```
     command
-* Copy data changes from the `Setup/InstallData.php` file to the `Setup/Patch/Schema/PrepareInitialConfig::apply` method
+* Copy data changes from the `Setup/InstallData::prepareInitialConfig` method 
+    to the `Setup/Patch/Schema/PrepareInitialConfig::apply` method
+* Copy all arguments from the `Setup\InstallData::__construct` method to the 
+    `Setup\Patch\Data\PrepareInitialConfig::__construct` method,
+     as well as all private properties of the class.
 * Create _**AddSmartModuleUserCustomerAttribute**_ and _**ConvertReviewMessageToJson**_ data patches in the same way
 and copy data changes from the appropriate methods of the `Setup/UpgradeData.php` file
-* Implement `PatchVersionInterface` for all data patches. Declare correct order for patches using module versions 
-    from the `Setup/UpgradeSchema.php` as a return value for `getVersion` method. 
+* Implement `\Magento\Framework\Setup\Patch\PatchVersionInterface` for all data patches.
+    Use the appropriate module versions from the `Setup/UpgradeSchema.php` as a return value for `getVersion` method. 
     * _Use **2.0.0** as a module version for `PrepareInitialConfig` patch_
+* Declare correct order for patches using `getDependencies` method. 
+    * Use `PrepareInitialConfig::class` as dependency for `AddSmartModuleUserCustomerAttribute` patch
+    * Use `AddSmartModuleUserCustomerAttribute::classs` as dependency for `ConvertReviewMessageToJson` patch
+    
 * Run
     ```bash
     bin/magento setup:upgrade
