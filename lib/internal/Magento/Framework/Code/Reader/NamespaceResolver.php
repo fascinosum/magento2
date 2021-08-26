@@ -86,6 +86,15 @@ class NamespaceResolver
         $classStart = array_search('{', $fileContent);
         $fileContent = array_slice($fileContent, 0, $classStart);
         $output = [];
+
+        // ensure php backwards compatibility
+        if (!defined('T_NAME_QUALIFIED')) {
+            define('T_NAME_QUALIFIED', 24001);
+        }
+        if (!defined('T_NAME_FULLY_QUALIFIED')) {
+            define('T_NAME_FULLY_QUALIFIED', 24002);
+        }
+
         foreach ($fileContent as $position => $token) {
             if (is_array($token) && $token[0] === T_USE) {
                 $import = array_slice($fileContent, $position);
@@ -104,7 +113,13 @@ class NamespaceResolver
                     $import = array_filter(
                         $import,
                         function ($token) {
-                            $whitelist = [T_NS_SEPARATOR, T_STRING, T_AS];
+                            $whitelist = [
+                                T_NS_SEPARATOR,
+                                T_STRING,
+                                T_AS,
+                                T_NAME_QUALIFIED,
+                                T_NAME_FULLY_QUALIFIED
+                            ];
                             if (isset($token[0]) && in_array($token[0], $whitelist)) {
                                 return true;
                             }

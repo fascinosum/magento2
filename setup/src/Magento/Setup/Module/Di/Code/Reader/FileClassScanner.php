@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\Setup\Module\Di\Code\Reader;
 
+use PhpToken;
+
 /**
  * Class FileClassScanner
  */
@@ -15,7 +17,10 @@ class FileClassScanner
     private const NAMESPACE_TOKENS = [
         T_WHITESPACE => true,
         T_STRING => true,
-        T_NS_SEPARATOR => true
+        T_NS_SEPARATOR => true,
+        //php8
+        T_NAME_QUALIFIED => true,
+        T_NAME_FULLY_QUALIFIED => true,
     ];
 
     private const ALLOWED_OPEN_BRACES_TOKENS = [
@@ -109,6 +114,15 @@ class FileClassScanner
         $triggerNamespace = false;
         $braceLevel = 0;
         $bracedNamespace = false;
+        $namespace = '';
+
+        // ensure php backwards compatibility
+        if (!defined('T_NAME_QUALIFIED')) {
+            define('T_NAME_QUALIFIED', 24001);
+        }
+        if (!defined('T_NAME_FULLY_QUALIFIED')) {
+            define('T_NAME_FULLY_QUALIFIED', 24002);
+        }
 
         // phpcs:ignore
         $this->tokens = token_get_all($this->getFileContents());
@@ -146,6 +160,15 @@ class FileClassScanner
                     $namespaceParts = [];
                     $bracedNamespace = $this->isBracedNamespace($index);
                     break;
+
+                // PHP 8
+                case T_NAME_QUALIFIED:
+                case T_NAME_FULLY_QUALIFIED:
+                    if ($triggerNamespace) {
+                        $namespace = $token[1];
+                    }
+                    break;
+
                 case T_TRAIT:
                 case T_CLASS:
                     // Current loop contains the class keyword. Next loop will have the class name itself.
@@ -157,7 +180,8 @@ class FileClassScanner
 
             // We have a class name, let's concatenate and return it!
             if ($class !== '') {
-                $fqClassName = trim(implode('', $namespaceParts)) . trim($class);
+                $fqClassName = $namespace ? (trim($namespace) . '\\' . trim($class))
+                    : (trim(implode('', $namespaceParts)) . trim($class));
                 return $fqClassName;
             }
         }

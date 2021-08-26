@@ -332,6 +332,8 @@ class Translate implements \Magento\Framework\TranslateInterface
                 continue;
             }
 
+            $key = is_array($key) ? $key : (string) $key;
+            $value = is_array($key) ? $key : (string) $key;
             $key = str_replace('""', '"', $key);
             $value = str_replace('""', '"', $value);
 
