@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b5294a895487eda8dc97e2f976a81f32",
+    "content-hash": "311e4133490c546066d6d88599651aa5",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.191.3",
+            "version": "3.191.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "6176504bc51ae5ac3a5276e05da0fa6abf71540b"
+                "reference": "3b01e0c7c1d9858e5d2f0ee9aa216d621f731765"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/6176504bc51ae5ac3a5276e05da0fa6abf71540b",
-                "reference": "6176504bc51ae5ac3a5276e05da0fa6abf71540b",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/3b01e0c7c1d9858e5d2f0ee9aa216d621f731765",
+                "reference": "3b01e0c7c1d9858e5d2f0ee9aa216d621f731765",
                 "shasum": ""
             },
             "require": {
@@ -92,9 +92,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.191.3"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.191.6"
             },
-            "time": "2021-08-24T18:18:22+00:00"
+            "time": "2021-08-27T18:14:01+00:00"
         },
         {
             "name": "brick/math",
@@ -3562,43 +3562,33 @@
         },
         {
             "name": "magento/composer",
-            "version": "1.7.0",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
-                "url": "https://github.com/magento/composer.git",
-                "reference": "59a67efe96a11d9d00ae20694c48c20770c4e904"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/magento/composer/zipball/59a67efe96a11d9d00ae20694c48c20770c4e904",
-                "reference": "59a67efe96a11d9d00ae20694c48c20770c4e904",
-                "shasum": ""
+                "url": "https://github.com/magento/composer",
+                "reference": "044dc5bf65eb9f348035057080cab764b6f33e5e"
             },
             "require": {
                 "composer/composer": "^1.9 || ^2.0",
-                "php": "~7.3.0||~7.4.0",
+                "php": "~7.3.0||~7.4.0||~8.0.0",
                 "symfony/console": "~4.4.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "^9"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
                     "Magento\\Composer\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "OSL-3.0",
                 "AFL-3.0"
             ],
             "description": "Magento composer library helps to instantiate Composer application and run composer commands.",
-            "support": {
-                "issues": "https://github.com/magento/composer/issues",
-                "source": "https://github.com/magento/composer/tree/1.7.0"
-            },
-            "time": "2021-03-29T21:33:27+00:00"
+            "time": "2021-08-03T03:04:34+00:00"
         },
         {
             "name": "magento/magento-composer-installer",
@@ -9779,17 +9769,11 @@
         },
         {
             "name": "magento/magento2-functional-testing-framework",
-            "version": "3.6.0",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
-                "url": "https://github.com/magento/magento2-functional-testing-framework.git",
-                "reference": "d0350979b7c02ca5329d61d1cce2760d14170e90"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/magento/magento2-functional-testing-framework/zipball/d0350979b7c02ca5329d61d1cce2760d14170e90",
-                "reference": "d0350979b7c02ca5329d61d1cce2760d14170e90",
-                "shasum": ""
+                "url": "https://github.com/magento/magento2-functional-testing-framework",
+                "reference": "9529ddca2561926e05057cdd7a810829917b90c7"
             },
             "require": {
                 "allure-framework/allure-codeception": "^1.4",
@@ -9810,7 +9794,7 @@
                 "monolog/monolog": "^2.3",
                 "mustache/mustache": "~2.5",
                 "nikic/php-parser": "^4.4",
-                "php": "^7.3",
+                "php": ">7.3",
                 "php-webdriver/webdriver": "^1.9.0",
                 "spomky-labs/otphp": "^10.0",
                 "symfony/console": "^4.4",
@@ -9824,13 +9808,13 @@
             "require-dev": {
                 "brainmaestro/composer-git-hooks": "^2.3.1",
                 "codacy/coverage": "^1.4",
-                "codeception/aspect-mock": "^3.0",
                 "php-coveralls/php-coveralls": "^1.0||^2.2",
                 "phpmd/phpmd": "^2.8.0",
                 "phpunit/phpunit": "^9.0",
                 "sebastian/phpcpd": "~6.0.0",
-                "squizlabs/php_codesniffer": "~3.5.4"
+                "squizlabs/php_codesniffer": "~3.6.0"
             },
+            "default-branch": true,
             "bin": [
                 "bin/mftf"
             ],
@@ -9849,7 +9833,19 @@
                     "MFTF\\": "dev/tests/functional/tests/MFTF"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "tests\\": "dev/tests"
+                }
+            },
+            "scripts": {
+                "tests": [
+                    "bin/phpunit-checks"
+                ],
+                "static": [
+                    "bin/static-checks"
+                ]
+            },
             "license": [
                 "AGPL-3.0"
             ],
@@ -9860,11 +9856,7 @@
                 "magento",
                 "testing"
             ],
-            "support": {
-                "issues": "https://github.com/magento/magento2-functional-testing-framework/issues",
-                "source": "https://github.com/magento/magento2-functional-testing-framework/tree/3.6.0"
-            },
-            "time": "2021-07-23T16:10:15+00:00"
+            "time": "2021-08-27T17:23:10+00:00"
         },
         {
             "name": "mustache/mustache",
@@ -12951,13 +12943,29 @@
             "time": "2016-07-21T11:18:01+00:00"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "package": "magento/composer",
+            "version": "dev-develop",
+            "alias": "1.8.0",
+            "alias_normalized": "1.8.0.0"
+        },
+        {
+            "package": "magento/magento2-functional-testing-framework",
+            "version": "dev-develop",
+            "alias": "3.7.0",
+            "alias_normalized": "3.7.0.0"
+        }
+    ],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "magento/composer": 20,
+        "magento/magento2-functional-testing-framework": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "~7.3.0||~7.4.0",
+        "php": "~7.3.0||~7.4.0||~8.0.0",
         "ext-bcmath": "*",
         "ext-ctype": "*",
         "ext-curl": "*",

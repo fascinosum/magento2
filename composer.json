@@ -10,8 +10,18 @@
         "preferred-install": "dist",
         "sort-packages": true
     },
+    "repositories": [
+        {
+            "url": "https://github.com/magento/composer",
+            "type": "git"
+        },
+        {
+            "url": "https://github.com/magento/magento2-functional-testing-framework",
+            "type": "git"
+        }
+    ],
     "require": {
-        "php": "~7.3.0||~7.4.0",
+        "php": "~7.3.0||~7.4.0||~8.0.0",
         "ext-bcmath": "*",
         "ext-ctype": "*",
         "ext-curl": "*",
@@ -60,7 +70,7 @@
         "laminas/laminas-view": "~2.12.0",
         "league/flysystem": "^2.0",
         "league/flysystem-aws-s3-v3": "^2.0",
-        "magento/composer": "1.7.0",
+        "magento/composer": "dev-develop as 1.8.0",
         "magento/magento-composer-installer": ">=0.1.11",
         "magento/zendframework1": "~1.14.2",
         "monolog/monolog": "^2.3",
@@ -84,7 +94,7 @@
         "friendsofphp/php-cs-fixer": "~3.0.0",
         "lusitanian/oauth": "~0.8.10",
         "magento/magento-coding-standard": "*",
-        "magento/magento2-functional-testing-framework": "^3.0",
+        "magento/magento2-functional-testing-framework": "dev-develop as 3.7.0",
         "pdepend/pdepend": "~2.10.0",
         "phpcompatibility/php-compatibility": "^9.3",
         "phpmd/phpmd": "^2.9.1",
